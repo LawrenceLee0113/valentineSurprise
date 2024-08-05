@@ -1,1 +1,52 @@
-這是驚喜 還沒開發完成...
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七夕驚喜</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('/image/bg.gif') no-repeat center center fixed;
+            background-size: cover;
+            /* color: #e04eab; */
+        }
+    </style>
+</head>
+<body class="flex flex-col justify-center items-center min-h-screen bg-gray-100">
+
+    <div class="text-center rounded-3xl bg-white bg-opacity-50 content p-12">
+        <h1 class="text-4xl font-bold mb-4">李董の七夕小驚喜</h1>
+        <div id="countdown" class="text-xl mb-6">XX 小時 XX 分 XX 秒</div>
+        <button id="startBtn" onclick="alert('敬請期待嘻嘻')" class="px-6 py-2 text-xl bg-green-500 text-white rounded hover:bg-green-600">
+            還沒開鼠👉👈
+        </button>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            // const targetDate = new Date('2024-08-05T16:33:00').getTime();
+            const targetDate = new Date('2024-08-10T00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            console.log(distance)
+
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerText = `倒數 ${days}天 ${hours} 小時 ${minutes} 分 ${seconds} 秒`;
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerText = '點擊下方按鈕開始！';
+                document.getElementById('startBtn').innerText = '開始惹😘';
+                document.getElementById('startBtn').onclick = () => location.href = "/surprise.html"
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
