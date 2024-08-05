@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解謎題小網頁</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div id="hint-container" class="text-center">
+            <img id="hint-image" src="image/love/hint1.jpg" alt="Hint 1" class="mx-auto mb-4">
+            <p id="hint-text" class="mb-4">給他們框框 共有四個字母</p>
+        </div>
+        <div class="flex justify-between mb-4">
+            <button id="prev-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50" disabled>上一頁</button>
+            <button id="next-btn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg">提示</button>
+        </div>
+        <div class="mb-4 flex justify-between mb-4">
+            <input id="answer-input" type="text" placeholder="你ㄉ密碼" class="flex-1 mr-4 px-4 py-2 border rounded-lg">
+            <button id="submit-btn" class=" bg-green-500 text-white px-4 py-2 rounded-lg disabled:opacity-50" disabled>確定</button>
+        </div>
+        <div id="message" class="text-center text-red-500"></div>
+
+    </div>
+
+    <script>
+        const hints = [
+            { src: 'image/love/hint1.jpg', text: '給他們框框 共有四個字母' },
+            { src: 'image/love/hint2.jpg', text: '哎呀 這樣總可以看出來了吧' },
+            { src: 'image/love/hint2.jpg', text: '🤫英文字母大寫ㄉ' },
+            { src: 'image/love/hint2.jpg', text: '嗚嗚 都給你畫出來了 難道我們之間沒有 嗎' },
+            { src: 'image/love/hint2.jpg', text: '給他一個大框框試試' },
+            { src: 'image/love/hint3.jpg', text: '這樣總該看出來了吧😨' }
+        ];
+
+        let currentHintIndex = 0;
+
+        const hintImage = document.getElementById('hint-image');
+        const hintText = document.getElementById('hint-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const answerInput = document.getElementById('answer-input');
+        const message = document.getElementById('message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        nextBtn.addEventListener('click', () => {
+            if (confirm('你確定要領取下一個提示嗎？')) {
+                currentHintIndex++;
+                updateHint();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentHintIndex--;
+            updateHint();
+        });
+
+        answerInput.addEventListener('input', () => {
+            if (answerInput.value == ""){
+                submitBtn.disabled = true;
+            }else{
+                submitBtn.disabled = false;
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            if (answerInput.value.toUpperCase() === 'LOVE') {
+                message.textContent = '恭喜你答對了！';
+            } else {
+                message.textContent = '答案錯誤，再試試看吧！';
+            }
+        });
+
+        function updateHint() {
+            hintImage.src = hints[currentHintIndex].src;
+            hintText.textContent = hints[currentHintIndex].text;
+            prevBtn.disabled = currentHintIndex === 0;
+            nextBtn.disabled = currentHintIndex === hints.length - 1;
+        }
+    </script>
+</body>
+</html>
