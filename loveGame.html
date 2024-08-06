@@ -1,28 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>解謎題小網頁</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+
+    <div id="ruleSection" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto">
+        <div class="text-center">
+            <h1 id="title" class="text-2xl font-bold mb-4">密碼猜猜猜</h1>
+            <p id="content" class="mb-4">給他們框框 共有四個字母</p>
+            <div class="video-container mb-4">
+                <video id="floating-video" autoplay loop>
+                    <source src="movie/最終版.mp4" type="video/mp4">
+
+
+                    您的瀏覽器不支持視頻標籤。
+                </video>
+            </div>
+            <div id="ui-btn" class="flex justify-between mt-4">
+                <div>
+
+                    <button id="prevButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
+                        onclick="prevPage()">上一頁</button>
+                </div>
+                <div>
+
+                    <button id="nextButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
+                        onclick="nextPage()">下一頁</button>
+                </div>
+            </div>
+            <div class="w-full flex justify-center">
+
+                <button id="startBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">開始</button>
+                <button id="giveBtn" class="hidden bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50" disabled>領取獎勵</button>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const floatingVideo = document.getElementById('floating-video');
+        const content = [
+            "嘻嘻嘻 驚喜沒有那麼好得到的<br>你需要付出一點努力才能得到！",
+            "接下來，你需要透過提示來猜出密碼，輸入正確的密碼才能獲得驚喜！",
+            "放心，密碼很簡單的！如果真的猜不出來，可以點擊提示按鈕來獲得提示！",
+            "以防你在猜密碼的時候無聊，我在旁邊彈鋼琴給你聽！記得打開聲音哦！",
+            "我都還沒彈完鋼琴你就猜完惹... 失算.. <br>你還是看我彈完再領獎勵吧😘",
+            "尊督假督 那麼難猜喔 好吧... 可以按下面領取獎勵了！"
+        ];
+        const title = [
+            "密碼猜猜猜",
+            "猜出密碼",
+            "放心簡單ㄉ",
+            "有沒有聽到",
+            "挖 你猜的好快！",
+            "嗚嗚嗚 太難了嗎"
+        ];
+
+        let currentPage = 0;
+
+        function updateContent() {
+
+            document.getElementById('content').innerHTML = content[currentPage];
+            document.getElementById('title').innerHTML = title[currentPage];
+            if (currentPage === 0) {
+                document.getElementById('prevButton').style.display = "none";
+            } else {
+                document.getElementById('prevButton').style.display = "block";
+            }
+            if (currentPage === content.length - 3) {
+                document.getElementById('nextButton').style.display = "none";
+                startBtn.style.display = "block";
+            } else {
+                document.getElementById('nextButton').style.display = "block";
+                startBtn.style.display = "none";
+            }
+
+            if (currentPage === 3) {
+                floatingVideo.style.display = "block";
+            } else {
+                floatingVideo.style.display = "none";
+            }
+
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateContent();
+            }
+        }
+        var isplay = false;
+
+        function nextPage() {
+            if(!isplay){
+                floatingVideo.play();
+                isplay = true;
+                const display = document.querySelector('#timer');
+                const duration = 112; // 1 minute 52 seconds in seconds
+                startCountdown(duration, display);
+            }
+
+            if (currentPage < content.length - 3) {
+                currentPage++;
+                updateContent();
+            }
+        }
+
+        // Initial content update
+        updateContent();
+
+        function startCountdown(duration) {
+            let timer = duration, minutes, seconds;
+            const interval = setInterval(() => {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    isEnd = true;
+                    giveBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        const giveBtn = document.getElementById('giveBtn');
+        giveBtn.addEventListener('click', () => {
+            location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        });
+    </script>
+
+    <div id="gameSection" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <div id="hint-container" class="text-center">
             <img id="hint-image" src="image/love/hint1.jpg" alt="Hint 1" class="mx-auto mb-4">
             <p id="hint-text" class="mb-4">給他們框框 共有四個字母</p>
         </div>
         <div class="flex justify-between mb-4">
-            <button id="prev-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50" disabled>上一頁</button>
-            <button id="next-btn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg">提示</button>
+            <button id="prev-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+                disabled>上一頁</button>
+            <button id="next-btn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg disabled:opacity-50">提示</button>
         </div>
         <div class="mb-4 flex justify-between mb-4">
             <input id="answer-input" type="text" placeholder="你ㄉ密碼" class="flex-1 mr-4 px-4 py-2 border rounded-lg">
-            <button id="submit-btn" class=" bg-green-500 text-white px-4 py-2 rounded-lg disabled:opacity-50" disabled>確定</button>
+            <button id="submit-btn" class=" bg-green-500 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+                disabled>確定</button>
         </div>
         <div id="message" class="text-center text-red-500"></div>
 
     </div>
+
+
+    <script>
+        const gameSec = document.getElementById("gameSection");
+        gameSec.style.display = "none";
+
+        const ruleSec = document.getElementById("ruleSection");
+        const startBtn = document.getElementById("startBtn");
+        startBtn.addEventListener("click", () => {
+            ruleSec.style.display = "none";
+            gameSec.style.display = "block";
+        });
+
+
+    </script>
 
     <script>
         const hints = [
@@ -57,16 +207,16 @@
         });
 
         answerInput.addEventListener('input', () => {
-            if (answerInput.value == ""){
+            if (answerInput.value == "") {
                 submitBtn.disabled = true;
-            }else{
+            } else {
                 submitBtn.disabled = false;
             }
         });
 
         submitBtn.addEventListener('click', () => {
             if (answerInput.value.toUpperCase() === 'LOVE') {
-                message.textContent = '恭喜你答對了！';
+                bingo();
             } else {
                 message.textContent = '答案錯誤，再試試看吧！';
             }
@@ -78,6 +228,39 @@
             prevBtn.disabled = currentHintIndex === 0;
             nextBtn.disabled = currentHintIndex === hints.length - 1;
         }
+
+        var isEnd = false;
+
+        function bingo() {
+            alert('恭喜你答對了！🎉');
+
+            floatingVideo.controls = true;
+            document.getElementById('ui-btn').style.display = "none";
+            giveBtn.classList.remove('hidden')
+
+            if(!isEnd){
+
+                currentPage = 4;
+                updateContent();
+                gameSec.style.display = "none";
+                ruleSec.style.display = "block";
+                floatingVideo.style.display = "block";
+            }else{
+                currentPage = 5;
+                updateContent();
+                gameSec.style.display = "none";
+                ruleSec.style.display = "block";
+                floatingVideo.style.display = "block";
+            }
+
+        }
+
+        floatingVideo.addEventListener('ended', () => {
+            alert('影片播放完畢！');
+            isEnd = true;
+            // 你可以在這裡添加其他你希望在影片播放完畢後執行的操作
+        });
     </script>
 </body>
+
 </html>
