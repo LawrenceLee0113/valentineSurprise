@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        #puzzle{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        #puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 20px;
+        }
+
+        .dropzone {
+            width: 100px;
+            height: 100px;
+            background-color: #ccc;
+            border: 2px dashed #999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #puzzle-pieces {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            width: 320px;
+            /* Adjust width as needed */
+            white-space: nowrap;
+        }
+
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            cursor: grab;
+            display: inline-block;
+        }
+
+        .restart-button {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .restart-button:hover {
+            background: linear-gradient(135deg, #fda085 0%, #f6d365 100%);
+            transform: translateY(-2px);
+        }
+
+        .restart-button:active {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+        }
+        #floating-video{
+
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="puzzle">
+
+        <h1 class="text-2xl mt-4">最後一拚</h1>
+        <div id="puzzle-board">
+            <div class="dropzone" id="zone1"></div>
+            <div class="dropzone" id="zone2"></div>
+            <div class="dropzone" id="zone3"></div>
+            <div class="dropzone" id="zone4"></div>
+            <div class="dropzone" id="zone5"></div>
+            <div class="dropzone" id="zone6"></div>
+            <div class="dropzone" id="zone7"></div>
+            <div class="dropzone" id="zone8"></div>
+            <div class="dropzone" id="zone9"></div>
+        </div>
+        <button id="restart-button" class="restart-button">重新開始</button>
+        <div id="puzzle-pieces">
+            <img src="image/puzzle/4.jpg" id="piece4" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/9.jpg" id="piece9" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/2.jpg" id="piece2" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/5.jpg" id="piece5" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/1.jpg" id="piece1" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/8.jpg" id="piece8" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/7.jpg" id="piece7" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/3.jpg" id="piece3" class="puzzle-piece" draggable="true">
+            <img src="image/puzzle/6.jpg" id="piece6" class="puzzle-piece" draggable="true">
+        </div>
+        <script>
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            const zones = document.querySelectorAll('.dropzone');
+            const restartButton = document.getElementById('restart-button');
+            let selectedPiece = null;
+
+            pieces.forEach(piece => {
+                piece.addEventListener('dragstart', dragStart);
+                piece.addEventListener('click', selectPiece);
+            });
+
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('drop', drop);
+            });
+
+            restartButton.addEventListener('click', restartPuzzle);
+
+            function dragStart(event) {
+                event.dataTransfer.setData('text/plain', event.target.id);
+                setTimeout(() => {
+                    event.target.classList.add('hide');
+                }, 0);
+            }
+
+            function dragOver(event) {
+                event.preventDefault();
+            }
+
+            function drop(event) {
+                event.preventDefault();
+                const id = event.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(id);
+                const dropzone = event.target;
+
+                // Check if the dropzone already has a piece
+                if (dropzone.children.length === 0 && dropzone.classList.contains('dropzone')) {
+                    dropzone.appendChild(draggableElement);
+                    draggableElement.classList.remove('hide');
+                }
+
+                checkPuzzleCompletion();
+            }
+
+            function selectPiece(event) {
+                if (selectedPiece) {
+                    selectedPiece.classList.remove('selected');
+                }
+                selectedPiece = event.target;
+                selectedPiece.classList.add('selected');
+            }
+
+            // Optional: Add CSS for selected piece
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .selected {
+                    border: 2px solid #000;
+                    transform: scale(1.1);
+                }
+            `;
+            document.head.appendChild(style);
+
+            function checkPuzzleCompletion() {
+                let completed = true;
+                for (let i = 1; i <= 9; i++) {
+                    const zone = document.getElementById('zone' + i);
+                    const piece = document.getElementById('piece' + i);
+                    if (zone.children.length === 0 || zone.children[0] !== piece) {
+                        completed = false;
+                        break;
+                    }
+                }
+                if (completed) {
+                    startPlayMovie();
+                }
+            }
+
+            function restartPuzzle() {
+                zones.forEach(zone => {
+                    if (zone.children.length > 0) {
+                        const piece = zone.children[0];
+                        document.getElementById('puzzle-pieces').appendChild(piece);
+                    }
+                });
+            }
+        </script>
+    </div>
+
+    <div id="movie">
+        <div class="video-container mb-4 w-full">
+            <video id="floating-video" loop>
+                <source src="movie/出遊.mp4" type="video/mp4">
+
+
+                您的瀏覽器不支持視頻標籤。
+            </video>
+        </div>
+
+        <!-- 下載按鈕 -->
+        <div class="w-full flex justify-center mb-4">
+            <a href="movie/出遊.mp4" download="movie.mp4"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">點擊此下載帶你出門影片</a>
+        </div>
+
+        <div class="w-full flex justify-center">
+            <a href="movie/最終版.mp4" download="movie.mp4"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">點擊此下載偶彈鋼琴影片</a>
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <script>
+        const floatingVideo = document.getElementById('floating-video');
+        document.getElementById('movie').style.display = 'none';
+        function startPlayMovie() {
+            alert('恭喜完成拼圖!');
+            document.getElementById('puzzle').style.display = 'none';
+            document.getElementById('movie').style.display = 'block';
+
+
+            floatingVideo.play();
+        }
+    </script>
+</body>
+
+</html>
