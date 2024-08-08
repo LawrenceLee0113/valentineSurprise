@@ -3,68 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>背景音樂和懸浮影片</title>
-    <style>
-        body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
-.video-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    height: 200px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-#floating-video {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: none;
-}
-
-    </style>
+    <title>Jigsaw Puzzle</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- <audio id="background-music" autoplay loop>
-        <source src="movie/最終版.mp4" type="audio/mpeg">
-        您的瀏覽器不支持音頻標籤。
-    </audio> -->
-
-    <div class="video-container">
-        <video id="floating-video" autoplay loop>
-            <source src="movie/最終版.mp4" type="video/mp4">
-
-
-            您的瀏覽器不支持視頻標籤。
-        </video>
+    <h1>Jigsaw Puzzle</h1>
+    <div id="puzzle-board">
+        <div class="dropzone" id="zone1"></div>
+        <div class="dropzone" id="zone2"></div>
+        <div class="dropzone" id="zone3"></div>
+        <div class="dropzone" id="zone4"></div>
+        <div class="dropzone" id="zone5"></div>
+        <div class="dropzone" id="zone6"></div>
+        <div class="dropzone" id="zone7"></div>
+        <div class="dropzone" id="zone8"></div>
+        <div class="dropzone" id="zone9"></div>
     </div>
-
-    <script>
-
-document.addEventListener('DOMContentLoaded', () => {
-    const backgroundMusic = document.getElementById('background-music');
-    const floatingVideo = document.getElementById('floating-video');
-
-    // 可選的控制功能，例如按下按鈕暫停/播放音樂
-    const musicControlButton = document.createElement('button');
-    musicControlButton.textContent = 'Pause Music';
-    musicControlButton.addEventListener('click', () => {
-        if (floatingVideo.paused) {
-            floatingVideo.play();
-            musicControlButton.textContent = 'Pause Music';
-        } else {
-            floatingVideo.pause();
-            musicControlButton.textContent = 'Play Music';
-        }
-    });
-    document.body.appendChild(musicControlButton);
-});
-
-    </script>
+    <div id="puzzle-pieces">
+        <img src="piece1.jpg" id="piece1" class="puzzle-piece" draggable="true">
+        <img src="piece2.jpg" id="piece2" class="puzzle-piece" draggable="true">
+        <img src="piece3.jpg" id="piece3" class="puzzle-piece" draggable="true">
+        <img src="piece4.jpg" id="piece4" class="puzzle-piece" draggable="true">
+        <img src="piece5.jpg" id="piece5" class="puzzle-piece" draggable="true">
+        <img src="piece6.jpg" id="piece6" class="puzzle-piece" draggable="true">
+        <img src="piece7.jpg" id="piece7" class="puzzle-piece" draggable="true">
+        <img src="piece8.jpg" id="piece8" class="puzzle-piece" draggable="true">
+        <img src="piece9.jpg" id="piece9" class="puzzle-piece" draggable="true">
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
